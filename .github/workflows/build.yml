@@ -39,7 +39,7 @@ jobs:
         with:
           images: ${{ inputs.image }}
           tags: |
-            type=ref,event=branch,value=$GITHUB_RUN_NUMBER-snapshot
+            type=ref,event=branch,value=snapshot-${{ github.run_number }}
             type=ref,event=pr
             type=semver,pattern={{version}}
       -
