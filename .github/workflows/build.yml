@@ -60,3 +60,6 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      -
+        name: Set output
+        run: echo '::set-output name=tags::${{ steps.meta.outputs.tags }}'
