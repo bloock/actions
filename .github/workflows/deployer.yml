@@ -3,6 +3,10 @@ name: deploy
 on:
   workflow_call:
     inputs:
+      environment:
+        description: "Environment"
+        required: true
+        type: string
       service:
         description: "Service name"
         required: true
@@ -15,25 +19,40 @@ on:
         description: "Image to deploy"
         required: true
         type: string
-    secrets:
-      KUBE_CONFIG:
-        required: true
 
 jobs:
-  deploy:
-    name: Deploy
+  deploy-dev:
+    name: Deploy DEV
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    if: ${{ inputs.environment}} == 'development'
     steps:
       - uses: azure/setup-kubectl@v2.0
 
       - uses: Azure/k8s-set-context@v2
         with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          kubeconfig: ${{ secrets.KUBE_CONFIG_DEV }}
 
       -
         name: Set image
         run: |
           DEPLOYMENT=`kubectl get deployments -l service=${{ inputs.service }} --output 'jsonpath={.items[0].metadata.name}'`
-          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ inputs.image }}
+          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}
+          kubectl rollout status deployment/$DEPLOYMENT
+
+  deploy-pro:
+    name: Deploy PRO
+    runs-on: ubuntu-latest
+    if: ${{ inputs.environment}} == 'production'
+    steps:
+      - uses: azure/setup-kubectl@v2.0
+
+      - uses: Azure/k8s-set-context@v2
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PRO }}
+
+      -
+        name: Set image
+        run: |
+          DEPLOYMENT=`kubectl get deployments -l service=${{ inputs.service }} --output 'jsonpath={.items[0].metadata.name}'`
+          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}
           kubectl rollout status deployment/$DEPLOYMENT
