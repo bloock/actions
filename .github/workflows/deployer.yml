@@ -1,0 +1,39 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      service:
+        description: "Service name"
+        required: true
+        type: string
+      container:
+        description: "Container name"
+        required: true
+        type: string
+      image:
+        description: "Image to deploy"
+        required: true
+        type: string
+    secrets:
+      KUBE_CONFIG:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: azure/setup-kubectl@v2.0
+
+      - uses: Azure/k8s-set-context@v2
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      -
+        name: Set image
+        run: |
+          DEPLOYMENT=`kubectl get deployments -l service=${{ inputs.service }} --output 'jsonpath={.items[0].metadata.name}'`
+          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ inputs.image }}
+          kubectl rollout status deployment/$DEPLOYMENT
