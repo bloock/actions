@@ -32,6 +32,7 @@ jobs:
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
+      - run: echo ${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}
       -
         name: Set image
         run: |
