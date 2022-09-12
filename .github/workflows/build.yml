@@ -13,6 +13,10 @@ on:
         required: true
       DOCKER_PASSWORD:
         required: true
+    outputs:
+      tags:
+        description: "Image tags pushed"
+        value: ${{ jobs.build.outputs.tags }}
 
 jobs:
   build:
