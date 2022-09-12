@@ -15,6 +15,10 @@ on:
         description: "Image to deploy"
         required: true
         type: string
+      tag:
+        description: "Image to deploy"
+        required: true
+        type: string
     secrets:
       DOCKER_REGISTRY:
         required: true
@@ -32,10 +36,10 @@ jobs:
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-      - run: echo ${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}
+      - run: echo ${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}:${{ inputs.tag }}
       -
         name: Set image
         run: |
           DEPLOYMENT=`kubectl get deployments -l service=${{ inputs.service }} --output 'jsonpath={.items[0].metadata.name}'`
-          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}
+          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}:${{ inputs.tag }}
           kubectl rollout status deployment/$DEPLOYMENT

@@ -38,6 +38,21 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ inputs.image }}-${{ hashFiles('yarn-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-buildx-${{ inputs.image }}-${{ hashFiles('yarn-lock.json') }}
+      - 
+        name: Set image tags
+        id: set-tag
+        if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
+        run: echo "::set-output name=tag::snapshot-${{ github.run_number }}"
+      - 
+        name: Set image tags
+        id: set-tag
+        if: ${{ github.event_name == 'pull_request' }}
+        run: echo "::set-output name=tag::pr-${{ github.event.pull_request.number }}-$(git rev-parse --short HEAD)"
+      - 
+        name: Set image tags
+        id: set-tag
+        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+        run: echo ::set-output name=tag::${{ github.ref_name }}"
       -
         name: Docker meta
         id: meta
