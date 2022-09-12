@@ -18,6 +18,8 @@ on:
     secrets:
       DOCKER_REGISTRY:
         required: true
+      KUBE_URL:
+        required: true
       KUBE_CONFIG:
         required: true
 
@@ -30,7 +32,9 @@ jobs:
 
       - uses: Azure/k8s-set-context@v2
         with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          method: service-account
+          k8s-url: ${{ secrets.KUBE_URL }}
+          k8s-secret: ${{ secrets.KUBE_CONFIG }}
 
       -
         name: Set image
