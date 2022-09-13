@@ -35,8 +35,6 @@ jobs:
       - uses: Azure/k8s-set-context@v2
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
-
-      - run: echo ${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}:${{ inputs.tag }}
       -
         name: Set image
         run: |
