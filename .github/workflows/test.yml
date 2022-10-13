@@ -24,5 +24,10 @@ jobs:
           git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
           make cache || true
       -
+        name: Generate mocks
+        run: |
+          go install github.com/golang/mock/mockgen@v1.6.0
+          make mocks || true
+      -
         name: Run tests
         run: make test
