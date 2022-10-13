@@ -9,7 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: docker:dind
     env:
       GOPRIVATE: github.com/bloock
       GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
@@ -20,12 +19,8 @@ jobs:
       -
         name: Setup
         run: |
-          apk add --no-cache make go git
           git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
           make cache || true
-      -
-        name: Generate mocks
-        run: |
           go install github.com/golang/mock/mockgen@v1.6.0
           make mocks || true
       -
