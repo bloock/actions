@@ -5,6 +5,8 @@ on:
     secrets:
       GH_ACCESS_TOKEN:
         required: true
+      STRIPE_KEY:
+        required: false
 
 jobs:
   test:
@@ -12,6 +14,7 @@ jobs:
     env:
       GOPRIVATE: github.com/bloock
       GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+      SUBSCRIPTIONS_STRIPESECRETAPIKEY: ${{ secrets.STRIPE_KEY }}
     steps:
       -
         name: Checkout
