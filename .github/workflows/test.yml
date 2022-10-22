@@ -7,6 +7,12 @@ on:
         required: true
       STRIPE_KEY:
         required: false
+      BLOOCKCHAIN_PROVIDER:
+        required: false
+      BLOOCKCHAIN_ADDRESS:
+        required: false
+      BLOOCKCHAIN_PRIVATE_KEY:
+        required: false
 
 jobs:
   test:
