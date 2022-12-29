@@ -3,6 +3,10 @@ name: deploy
 on:
   workflow_call:
     inputs:
+      namespace:
+        description: "Namespace"
+        default: "default"
+        type: string
       service:
         description: "Service name"
         required: true
@@ -38,6 +42,6 @@ jobs:
       -
         name: Set image
         run: |
-          DEPLOYMENT=`kubectl get deployments -l service=${{ inputs.service }} --output 'jsonpath={.items[0].metadata.name}'`
-          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}:${{ inputs.tag }}
-          kubectl rollout status deployment/$DEPLOYMENT
+          DEPLOYMENT=`kubectl get deployments -n ${{ inputs.namespace }} -l service=${{ inputs.service }} --output 'jsonpath={.items[0].metadata.name}'`
+          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}:${{ inputs.tag }} -n ${{ inputs.namespace }}
+          kubectl rollout status deployment/$DEPLOYMENT -n ${{ inputs.namespace }}
