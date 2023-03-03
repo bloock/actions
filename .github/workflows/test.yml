@@ -13,6 +13,8 @@ on:
         required: false
       BLOOCKCHAIN_PRIVATE_KEY:
         required: false
+      BLOOCK_API_KEY:
+        required: false
 
 jobs:
   test:
