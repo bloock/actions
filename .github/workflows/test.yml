@@ -24,6 +24,7 @@ jobs:
       BLOOCKCHAINPROVIDER: ${{ secrets.BLOOCKCHAIN_PROVIDER }}
       BLOOCKCHAINADDRESS: ${{ secrets.BLOOCKCHAIN_ADDRESS }}
       BLOOCKCHAINPRIVATEKEY: ${{ secrets.BLOOCKCHAIN_PRIVATE_KEY }}
+      BLOOCK_API_KEY: ${{ secrets.BLOOCK_API_KEY }}
 
     steps:
       -
