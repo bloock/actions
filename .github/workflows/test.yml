@@ -28,7 +28,7 @@ on:
       AZURE_CDN_ENDPOINT_HOSTNAME:
         required: false
       AZURE_CDN_ENDPOINT_NAME:
-        requied: false
+        required: false
       AZURE_CDN_PROFILE_NAME:
         required: false
       AZURE_CDN_RESOURCE_NAME:
