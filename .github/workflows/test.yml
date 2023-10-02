@@ -15,6 +15,9 @@ on:
         required: false
       BLOOCK_API_KEY:
         required: false
+      AZURE_TENANT_ID_DEV:
+        required: false
+      
 
 jobs:
   test:
