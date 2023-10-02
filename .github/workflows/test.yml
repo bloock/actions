@@ -17,7 +17,34 @@ on:
         required: false
       AZURE_TENANT_ID_DEV:
         required: false
-      
+      AZURE_SUBSCRIPTION_ID_DEV:
+        required: false
+      AZURE_ANALYTICS_WORKSPACE_ID_DEV:
+        required: false
+      AZURE_ANALYTICS_SERVICE_PRINCIPAL_CLIENT_SECRET:
+        required: false
+      AZURE_ANALYTICS_SERVICE_PRINCIPAL_CLIENT_ID:
+        required: false
+      AZURE_CDN_ENDPOINT_HOSTNAME:
+        required: false
+      AZURE_CDN_ENDPOINT_NAME:
+        requied: false
+      AZURE_CDN_PROFILE_NAME:
+        required: false
+      AZURE_CDN_RESOURCE_NAME:
+        required: false
+      AZURE_CDN_SERVICE_PRINCIPAL_CLIENT_SECRET:
+        required: false
+      AZURE_CDN_SERVICE_PRINCIPAL_CLIENT_ID: 
+        required: false
+      AZURE_CONNECTION_STR:
+        required: false
+      TEST_AUTH_TOKEN:
+        required: false
+      INFURA_USER:
+        required: false
+      INFURA_PASSWORD: 
+        required: false
 
 jobs:
   test:
