@@ -6,29 +6,36 @@ on:
       tag:
         description: "Image tag"
         value: ${{ jobs.version.outputs.tag }}
+      env:
+        description: "Environment"
+        value: ${{ jobs.version.outputs.env }}
 
 jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.output.outputs.tag }}
+      env: ${{ steps.output.outputs.env }}
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      - 
-        name: Set image tags
-        if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
-        run: echo "IMAGE_TAG=${{ github.run_number }}-snapshot" >> $GITHUB_ENV
-      - 
-        name: Set image tags
-        if: ${{ github.event_name == 'pull_request' }}
-        run: echo "IMAGE_TAG=pr-${{ github.event.pull_request.number }}-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-      - 
-        name: Set image tags
-        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-        run: echo "IMAGE_TAG=release-${{ github.ref_name }}" >> $GITHUB_ENV
-      - 
-        id: output
-        name: Set output
-        run: echo "::set-output name=tag::${{ env.IMAGE_TAG }}"
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set image tags
+      if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
+      run: |
+        echo "IMAGE_TAG=${{ github.run_number }}-snapshot" >> $GITHUB_ENV
+        echo "ENV=development" >> $GITHUB_ENV
+    - name: Set image tags
+      if: ${{ github.event_name == 'pull_request' }}
+      run: |
+        echo "IMAGE_TAG=pr-${{ github.event.pull_request.number }}-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        echo "ENV=development" >> $GITHUB_ENV
+    - name: Set image tags
+      if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+      run: |
+        echo "IMAGE_TAG=release-${{ github.ref_name }}" >> $GITHUB_ENV
+        echo "ENV=production" >> $GITHUB_ENV
+    - id: output
+      name: Set output
+      run: |
+        echo "::set-output name=tag::${{ env.IMAGE_TAG }}"
+        echo "::set-output name=env::${{ env.ENV }}"
