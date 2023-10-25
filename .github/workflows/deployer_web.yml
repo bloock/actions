@@ -1,0 +1,49 @@
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: "Path to the artifact"
+        default: "."
+        type: string
+      has_cdn:
+        description: "Flag to indicate if the website has an enabled CDN endpoint"
+        default: false
+        type: boolean
+    secrets:
+      SP_CREDENTIALS:
+        required: true
+      STORAGE_ACCOUNT_NAME:
+        required: true
+      CDN_PROFILE_NAME:
+        required: true
+      CDN_ENDPOINT:
+        required: true
+      RESOURCE_GROUP:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.SP_CREDENTIALS }}
+    - name: Upload to blob storage
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} --auth-mode key -d '$web' -s ${{ inputs.path }}
+    - name: Purge CDN endpoint
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az cdn endpoint purge --content-paths  "/*" --profile-name "${{ secrets.CDN_PROFILE_NAME }}" --name "${{ secrets.CDN_ENDPOINT }}" --resource-group "${{ secrets.RESOURCE_GROUP }}"
+        if: ${{ inputs.has_cdn }}
+    - name: logout
+      run: |
+        az logout
+      if: always()
