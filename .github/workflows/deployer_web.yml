@@ -45,7 +45,7 @@ jobs:
       with:
         inlineScript: |
           az cdn endpoint purge --content-paths  "/*" --profile-name "${{ secrets.CDN_PROFILE_NAME }}" --name "${{ secrets.CDN_ENDPOINT }}" --resource-group "${{ secrets.RESOURCE_GROUP }}"
-        if: ${{ inputs.has_cdn }}
+      if: ${{ inputs.has_cdn }}
     - name: logout
       run: |
         az logout
