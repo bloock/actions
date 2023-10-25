@@ -3,9 +3,9 @@ name: deploy
 on:
   workflow_call:
     inputs:
-      path:
-        description: "Path to the artifact"
-        default: "."
+      artifact:
+        description: "Artifact name"
+        required: true
         type: string
       has_cdn:
         description: "Flag to indicate if the website has an enabled CDN endpoint"
@@ -28,6 +28,10 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v1
+      with:
+        name: ${{ inputs.artifact }}
     - uses: actions/checkout@v3
     - uses: azure/login@v1
       with:
@@ -36,7 +40,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} --auth-mode key -d '$web' -s ${{ inputs.path }}
+          az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} --auth-mode key -d '$web' -s ${{ inputs.artifact }}
     - name: Purge CDN endpoint
       uses: azure/CLI@v1
       with:
