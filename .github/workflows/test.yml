@@ -35,7 +35,7 @@ on:
         required: false
       AZURE_CDN_SERVICE_PRINCIPAL_CLIENT_SECRET:
         required: false
-      AZURE_CDN_SERVICE_PRINCIPAL_CLIENT_ID: 
+      AZURE_CDN_SERVICE_PRINCIPAL_CLIENT_ID:
         required: false
       AZURE_CONNECTION_STR:
         required: false
@@ -43,7 +43,7 @@ on:
         required: false
       INFURA_USER:
         required: false
-      INFURA_PASSWORD: 
+      INFURA_PASSWORD:
         required: false
 
 jobs:
@@ -74,18 +74,16 @@ jobs:
       DATA_AVAILABILITY_IPFSPASSWORD: ${{ secrets.INFURA_PASSWORD }}
 
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Setup
+      - name: Setup
         run: |
+          sudo apt-get update && apt-get install -y libvips libvips-dev
           git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
           export PATH=${PATH}:`go env GOPATH`/bin
           go install github.com/goware/modvendor@v0.5.0
           make cache || true
           go install github.com/golang/mock/mockgen@v1.6.0
           make mocks || true
-      -
-        name: Run tests
+      - name: Run tests
         run: make test
