@@ -52,6 +52,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}:${{ inputs.tag }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_REGISTRY }}/${{ inputs.image }}:buildcache,mode=max
+          tags: ${{ secrets.DOCKER_REGISTRY }}/bloock-common/${{ inputs.image }}:${{ inputs.tag }}
+          cache-from: type=registry,ref=${{ secrets.DOCKER_REGISTRY }}/bloock-common/${{ inputs.image }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_REGISTRY }}/bloock-common/${{ inputs.image }}:buildcache,mode=max
