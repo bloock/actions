@@ -28,6 +28,8 @@ on:
         required: true
       KUBE_CONFIG:
         required: true
+      GOOGLE_CREDENTIALS_DEV:
+        required: true
 
 jobs:
   deploy:
