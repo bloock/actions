@@ -26,9 +26,11 @@ on:
     secrets:
       DOCKER_REGISTRY:
         required: true
-      KUBE_CONFIG:
+      GOOGLE_CREDENTIALS:
         required: true
-      GOOGLE_CREDENTIALS_DEV:
+      GLOOGLE_CLUSTER_NAME:
+        required: true
+      GOOGLE_PROJECT_ID:
         required: true
 
 jobs:
@@ -39,15 +41,15 @@ jobs:
       - name: Authenticate Google
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS_DEV }}
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
       - name: Get GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
         with:
-          cluster_name: bloock-cluster-dev-44ca8f9 
+          cluster_name: ${{ secrets.GLOOGLE_CLUSTER_NAME }}
           location: europe-west1 
       -
         name: Set image
         run: |
           DEPLOYMENT=`kubectl get deployments -n ${{ inputs.namespace }} -l service=${{ inputs.service }} --output 'jsonpath={.items[0].metadata.name}'`
-          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ secrets.DOCKER_REGISTRY }}/bloock-common/${{ inputs.image }}:${{ inputs.tag }} -n ${{ inputs.namespace }}
+          kubectl set image --record deployment/$DEPLOYMENT ${{ inputs.container }}=${{ secrets.DOCKER_REGISTRY }}/${{ secrets.GOOGLE_PROJECT_ID }}/${{ inputs.image }}:${{ inputs.tag }} -n ${{ inputs.namespace }}
           kubectl rollout status deployment/$DEPLOYMENT -n ${{ inputs.namespace }}
