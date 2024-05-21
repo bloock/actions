@@ -28,7 +28,7 @@ on:
         required: true
       GOOGLE_CREDENTIALS:
         required: true
-      GLOOGLE_CLUSTER_NAME:
+      GOOGLE_CLUSTER_NAME:
         required: true
       GOOGLE_PROJECT_ID:
         required: true
@@ -45,7 +45,7 @@ jobs:
       - name: Get GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
         with:
-          cluster_name: ${{ secrets.GLOOGLE_CLUSTER_NAME }}
+          cluster_name: ${{ secrets.GOOGLE_CLUSTER_NAME }}
           location: europe-west1 
       -
         name: Set image
