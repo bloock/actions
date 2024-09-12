@@ -28,6 +28,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact }}
+          path: ${{ inputs.artifact }}
 
       - id: "auth"
         uses: google-github-actions/auth@v2
