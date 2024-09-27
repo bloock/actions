@@ -9,6 +9,9 @@ on:
       tag:
         required: true
         type: string
+      environment:
+        required: true
+        type: string
     secrets:
       GH_ACCESS_TOKEN:
         required: true
@@ -19,6 +22,12 @@ on:
       DOCKER_PASSWORD:
         required: true
       GOOGLE_PROJECT_ID:
+        required: true
+      SENTRY_AUTH_TOKEN:
+        required: true
+      SENTRY_ORG:
+        required: true
+      SENTRY_PROJECT:
         required: true
 
 jobs:
@@ -57,3 +66,14 @@ jobs:
           tags: ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.GOOGLE_PROJECT_ID }}/${{ inputs.image }}:${{ inputs.tag }}
           cache-from: type=registry,ref=${{ secrets.DOCKER_REGISTRY }}/${{ secrets.GOOGLE_PROJECT_ID }}/${{ inputs.image }}:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_REGISTRY }}/${{ secrets.GOOGLE_PROJECT_ID }}/${{ inputs.image }}:buildcache,mode=max
+      -
+        name: Build Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: ${{ inputs.env }}
+          version: ${{ inputs.tag }}
+          set_commits: skip
