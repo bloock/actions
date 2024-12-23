@@ -36,9 +36,9 @@ jobs:
           sudo apt-get update && sudo apt-get install -y libvips libvips-dev
           git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
           export PATH=${PATH}:`go env GOPATH`/bin
-          go install github.com/goware/modvendor@v0.5.0
-          make cache || true
           go install github.com/golang/mock/mockgen@v1.6.0
           make mocks || true
+          go install github.com/goware/modvendor@v0.5.0
+          make cache || true
       - name: Run tests
         run: make test
